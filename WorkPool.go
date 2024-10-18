@@ -36,7 +36,9 @@ func CreatePool[taskResult any](maxWorker int) *WorkerPool[taskResult] {
 	return obj
 }
 
-func (pool *WorkerPool[taskResult]) Run(task func(*WorkerPool[taskResult], bool, ...any), funcResultHandler func(taskResult), params ...any) {
+type FuncAdapter[taskResult any] func(*WorkerPool[taskResult], bool, ...any)
+
+func (pool *WorkerPool[taskResult]) Run(task FuncAdapter[taskResult], funcResultHandler func(taskResult), params ...any) {
 	waitForWorkers := func() {
 		for {
 			select {
